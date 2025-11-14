@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion Universitaire - Career Academy Institute</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/js/splide.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/@splidejs/splide@4.1.4/dist/css/splide.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Source+Serif+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+        }
+        .serif-font {
+            font-family: 'Source Serif Pro', serif;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        .gradient-text {
+            background: linear-gradient(135deg, #1e3a8a, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .sidebar-item {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+        .sidebar-item:hover {
+            background: rgba(30, 58, 138, 0.1);
+            transform: translateX(4px);
+        }
+        .sidebar-item.active {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            color: white;
+        }
+        .notification-dot {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .course-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(248,250,252,0.9));
+            border-left: 4px solid #f97316;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(30, 58, 138, 0.05));
+        }
+        .management-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .management-card:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+        .list-item {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .list-item:hover {
+            border-color: #3b82f6;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Sidebar -->
+    <div class="fixed left-0 top-0 h-full w-64 glass-effect z-50">
+        <div class="p-6">
+            <div class="flex items-center mb-8">
+                <div class="w-12 h-12 bg-gradient-to-br from-blue-600 to-blue-800 rounded-xl flex items-center justify-center">
+                    <span class="text-white font-bold text-xl">CA</span>
+                </div>
+                <div class="ml-3">
+                    <h1 class="serif-font text-lg font-bold text-gray-800">Career Academy</h1>
+                    <p class="text-xs text-gray-600">Institute</p>
+                </div>
+            </div>
+            
+            <nav class="space-y-2">
+                <a href="index.html" class="sidebar-item active flex items-center px-4 py-3 text-sm font-medium">
+                    <span class="mr-3">📊</span>
+                    Tableau de Bord
+                </a>
+                <a href="schedule.html" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <span class="mr-3">📅</span>
+                    Emploi du Temps
+                </a>
+                <a href="courses.html" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <span class="mr-3">📚</span>
+                    Gestion des Cours
+                </a>
+                <a href="email.html" class="sidebar-item flex items-center px-4 py-3 text-sm font-medium text-gray-700 hover:text-gray-900">
+                    <span class="mr-3">📧</span>
+                    Emails
+                </a>
+            </nav>
+        </div>
+        
+        <div class="absolute bottom-6 left-6 right-6">
+            <div class="bg-gradient-to-r from-blue-50 to-orange-50 rounded-xl p-4">
+                <p class="text-xs text-gray-600 mb-2">Email configuré</p>
+                <p class="text-xs font-medium text-gray-800">charles@career-academyinstitute.com</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="ml-64 min-h-screen">
+        <!-- Header -->
+        <header class="bg-white shadow-sm border-b border-gray-200">
+            <div class="px-8 py-4 flex items-center justify-between">
+                <div>
+                    <h2 class="serif-font text-2xl font-bold gradient-text">Tableau de Bord</h2>
+                    <p class="text-gray-600 text-sm">Gestion académique - Semaine du 14 novembre 2025</p>
+                </div>
+                
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="p-2 text-gray-600 hover:text-gray-900 transition-colors">
+                            <span class="text-xl">🔔</span>
+                            <span class="notification-dot absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                        </button>
+                    </div>
+                    <button onclick="openQuickAddModal()" class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-2 rounded-lg font-medium hover:from-blue-700 hover:to-blue-800 transition-all">
+                        + Ajouter
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <main class="p-8">
+            <!-- Management Section -->
+            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden mb-8">
+                <div class="p-6 border-b border-gray-200">
+                    <h3 class="serif-font text-lg font-semibold text-gray-800">Gestion des Éléments Académiques</h3>
+                    <p class="text-gray-600 text-sm mt-1">Gérer les niveaux, parcours, enseignants et cours</p>
+                </div>
+                
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Levels Management -->
+                        <div class="management-card" onclick="openLevelsManagement()">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
+                                    <span class="text-blue-600 text-xl">🎓</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Niveaux</h4>
+                                    <p class="text-sm text-gray-600" id="levelsCount">0 niveaux</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Gérer les niveaux académiques (L1, L2, L3, M1, M2, Doctorat)</p>
+                            <div class="flex items-center text-blue-600 text-sm font-medium">
+                                <span>Gérer les niveaux</span>
+                                <span class="ml-2">→</span>
+                            </div>
+                        </div>
+
+                        <!-- Programs Management -->
+                        <div class="management-card" onclick="openProgramsManagement()">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4">
+                                    <span class="text-green-600 text-xl">📋</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Parcours</h4>
+                                    <p class="text-sm text-gray-600" id="programsCount">0 parcours</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Créer et gérer les parcours d'études par niveau</p>
+                            <div class="flex items-center text-green-600 text-sm font-medium">
+                                <span>Gérer les parcours</span>
+                                <span class="ml-2">→</span>
+                            </div>
+                        </div>
+
+                        <!-- Teachers Management -->
+                        <div class="management-card" onclick="openTeachersManagement()">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-4">
+                                    <span class="text-purple-600 text-xl">👨‍🏫</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Enseignants</h4>
+                                    <p class="text-sm text-gray-600" id="teachersCount">0 enseignants</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Gérer la liste des enseignants et leurs attributions</p>
+                            <div class="flex items-center text-purple-600 text-sm font-medium">
+                                <span>Gérer les enseignants</span>
+                                <span class="ml-2">→</span>
+                            </div>
+                        </div>
+
+                        <!-- Courses Management -->
+                        <div class="management-card" onclick="window.location.href='courses.html'">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4">
+                                    <span class="text-orange-600 text-xl">📖</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-gray-800">Cours</h4>
+                                    <p class="text-sm text-gray-600" id="coursesCount">0 cours</p>
+                                </div>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-4">Créer et attribuer des cours aux parcours</p>
+                            <div class="flex items-center text-orange-600 text-sm font-medium">
+                                <span>Gérer les cours</span>
+                                <span class="ml-2">→</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stats-card hover-lift rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Cours cette semaine</p>
+                            <p class="text-3xl font-bold text-gray-800 mt-1">24</p>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <span class="text-blue-600 text-xl">📚</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-600 text-sm font-medium">+3</span>
+                        <span class="text-gray-500 text-sm ml-1">vs semaine dernière</span>
+                    </div>
+                </div>
+
+                <div class="stats-card hover-lift rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Étudiants actifs</p>
+                            <p class="text-3xl font-bold text-gray-800 mt-1">1,247</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
+                            <span class="text-green-600 text-xl">👥</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-600 text-sm font-medium">+5.2%</span>
+                        <span class="text-gray-500 text-sm ml-1">ce mois-ci</span>
+                    </div>
+                </div>
+
+                <div class="stats-card hover-lift rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Taux d'occupation</p>
+                            <p class="text-3xl font-bold text-gray-800 mt-1">87%</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <span class="text-orange-600 text-xl">📊</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-orange-600 text-sm font-medium">Optimal</span>
+                        <span class="text-gray-500 text-sm ml-1">semaine en cours</span>
+                    </div>
+                </div>
+
+                <div class="stats-card hover-lift rounded-xl p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 text-sm font-medium">Emails envoyés</p>
+                            <p class="text-3xl font-bold text-gray-800 mt-1">156</p>
+                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <span class="text-purple-600 text-xl">📧</span>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <span class="text-green-600 text-sm font-medium">98%</span>
+                        <span class="text-gray-500 text-sm ml-1">taux de livraison</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Weekly Schedule Preview -->
+                <div class="lg:col-span-2">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-6 border-b border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <h3 class="serif-font text-lg font-semibold text-gray-800">Emploi du Temps - Cette Semaine</h3>
+                                <a href="schedule.html" class="text-blue-600 text-sm font-medium hover:text-blue-700">Voir tout →</a>
+                            </div>
+                        </div>
+                        
+                        <div class="p-6">
+                            <div id="weeklyChart" style="height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="lg:col-span-1 space-y-6">
+                    <!-- Recent Courses -->
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h3 class="serif-font text-lg font-semibold text-gray-800 mb-4">Cours Récents</h3>
+                        <div class="space-y-3">
+                            <div class="course-card p-4 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Programmation Web</p>
+                                        <p class="text-sm text-gray-600">L1 Informatique</p>
+                                    </div>
+                                    <span class="text-xs bg-orange-100 text-orange-600 px-2 py-1 rounded-full">09:00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="course-card p-4 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Mathématiques Discrètes</p>
+                                        <p class="text-sm text-gray-600">L2 Mathématiques</p>
+                                    </div>
+                                    <span class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full">14:00</span>
+                                </div>
+                            </div>
+                            
+                            <div class="course-card p-4 rounded-lg">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-medium text-gray-800">Base de Données</p>
+                                        <p class="text-sm text-gray-600">M1 Informatique</p>
+                                    </div>
+                                    <span class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded-full">16:00</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats -->
+                    <div class="bg-gradient-to-br from-blue-50 to-orange-50 rounded-xl p-6">
+                        <h3 class="serif-font text-lg font-semibold text-gray-800 mb-4">Rapport Hebdomadaire</h3>
+                        <div class="space-y-3">
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Cours programmés</span>
+                                <span class="font-semibold text-gray-800">24</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Heures d'enseignement</span>
+                                <span class="font-semibold text-gray-800">48h</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-gray-600">Salles utilisées</span>
+                                <span class="font-semibold text-gray-800">12</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick="generateWeeklyPDF()" class="w-full mt-4 bg-white text-gray-700 py-2 px-4 rounded-lg font-medium hover:bg-gray-50 transition-colors">
+                            Générer PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Levels Management Modal -->
+    <div id="levelsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="serif-font text-xl font-semibold text-gray-800">Gérer les Niveaux</h3>
+                <button onclick="closeModal('levelsModal')" class="text-gray-500 hover:text-gray-700">
+                    <span class="text-xl">✕</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-4">Ajouter un Niveau</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom du Niveau</label>
+                            <input type="text" id="levelName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ex: Licence 1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Code</label>
+                            <input type="text" id="levelCode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Ex: L1">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Couleur</label>
+                            <input type="color" id="levelColor" class="w-full h-10 border border-gray-300 rounded-lg" value="#3b82f6">
+                        </div>
+                        <button onclick="addLevel()" class="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition-colors">
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-4">Niveaux Existants</h4>
+                    <div id="levelsList" class="space-y-2 max-h-80 overflow-y-auto">
+                        <!-- Levels will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Programs Management Modal -->
+    <div id="programsModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="serif-font text-xl font-semibold text-gray-800">Gérer les Parcours</h3>
+                <button onclick="closeModal('programsModal')" class="text-gray-500 hover:text-gray-700">
+                    <span class="text-xl">✕</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-4">Ajouter un Parcours</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Niveau</label>
+                            <select id="programLevel" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                                <option value="">Sélectionner un niveau</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom du Parcours</label>
+                            <input type="text" id="programName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Ex: Informatique">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Code</label>
+                            <input type="text" id="programCode" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent" placeholder="Ex: INFO">
+                        </div>
+                        <button onclick="addProgram()" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-green-700 transition-colors">
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-4">Parcours Existants</h4>
+                    <div id="programsList" class="space-y-2 max-h-80 overflow-y-auto">
+                        <!-- Programs will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Teachers Management Modal -->
+    <div id="teachersModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="serif-font text-xl font-semibold text-gray-800">Gérer les Enseignants</h3>
+                <button onclick="closeModal('teachersModal')" class="text-gray-500 hover:text-gray-700">
+                    <span class="text-xl">✕</span>
+                </button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-4">Ajouter un Enseignant</h4>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom Complet</label>
+                            <input type="text" id="teacherName" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: Dr. Martin Dubois">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                            <input type="email" id="teacherEmail" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: martin.dubois@univ.fr">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Département</label>
+                            <input type="text" id="teacherDepartment" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" placeholder="Ex: Informatique">
+                        </div>
+                        <button onclick="addTeacher()" class="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors">
+                            Ajouter
+                        </button>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="font-semibold text-gray-800 mb-4">Enseignants Existants</h4>
+                    <div id="teachersList" class="space-y-2 max-h-80 overflow-y-auto">
+                        <!-- Teachers will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Add Modal -->
+    <div id="quickAddModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+        <div class="bg-white rounded-xl p-8 max-w-md w-full mx-4">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="serif-font text-xl font-semibold text-gray-800">Ajouter Rapidement</h3>
+                <button onclick="closeModal('quickAddModal')" class="text-gray-500 hover:text-gray-700">
+                    <span class="text-xl">✕</span>
+                </button>
+            </div>
+            
+            <div class="space-y-4">
+                <button onclick="openLevelsManagement(); closeModal('quickAddModal');" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:bg-blue-50 hover:border-blue-300 transition-colors">
+                    <span class="text-2xl mr-4">🎓</span>
+                    <span class="font-medium text-gray-800">Niveau</span>
+                </button>
+                
+                <button onclick="openProgramsManagement(); closeModal('quickAddModal');" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:bg-green-50 hover:border-green-300 transition-colors">
+                    <span class="text-2xl mr-4">📋</span>
+                    <span class="font-medium text-gray-800">Parcours</span>
+                </button>
+                
+                <button onclick="openTeachersManagement(); closeModal('quickAddModal');" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors">
+                    <span class="text-2xl mr-4">👨‍🏫</span>
+                    <span class="font-medium text-gray-800">Enseignant</span>
+                </button>
+                
+                <button onclick="window.location.href='courses.html';" class="w-full flex items-center p-4 border border-gray-200 rounded-lg hover:bg-orange-50 hover:border-orange-300 transition-colors">
+                    <span class="text-2xl mr-4">📖</span>
+                    <span class="font-medium text-gray-800">Cours</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="main.js"></script>
+    <script>
+        // Fonctions de gestion des niveaux
+        function openLevelsManagement() {
+            openModal('levelsModal');
+            updateLevelsList();
+            updateLevelSelects();
+        }
+
+        function openProgramsManagement() {
+            openModal('programsModal');
+            updateProgramsList();
+            updateLevelSelects();
+        }
+
+        function openTeachersManagement() {
+            openModal('teachersModal');
+            updateTeachersList();
+        }
+
+        function openQuickAddModal() {
+            openModal('quickAddModal');
+        }
+
+        function updateLevelsList() {
+            if (!window.universityApp || !window.universityApp.appData) return;
+            
+            const levelsList = document.getElementById('levelsList');
+            const levels = window.universityApp.appData.levels;
+            
+            levelsList.innerHTML = '';
+            
+            levels.forEach(level => {
+                const levelDiv = document.createElement('div');
+                levelDiv.className = 'list-item';
+                levelDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full mr-3" style="background-color: ${level.color}"></div>
+                        <div>
+                            <span class="font-medium">${level.name}</span>
+                            <span class="text-gray-500 text-sm ml-2">(${level.code})</span>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editLevel('${level.id}')" class="p-1 text-blue-500 hover:text-blue-700">
+                            <span class="text-sm">✏️</span>
+                        </button>
+                        <button onclick="deleteLevel('${level.id}')" class="p-1 text-red-500 hover:text-red-700">
+                            <span class="text-sm">🗑️</span>
+                        </button>
+                    </div>
+                `;
+                levelsList.appendChild(levelDiv);
+            });
+            
+            document.getElementById('levelsCount').textContent = `${levels.length} niveaux`;
+        }
+
+        function updateProgramsList() {
+            if (!window.universityApp || !window.universityApp.appData) return;
+            
+            const programsList = document.getElementById('programsList');
+            const programs = window.universityApp.appData.programs;
+            
+            programsList.innerHTML = '';
+            
+            programs.forEach(program => {
+                const level = window.universityApp.appData.levels.find(l => l.id === program.level_id);
+                const programDiv = document.createElement('div');
+                programDiv.className = 'list-item';
+                programDiv.innerHTML = `
+                    <div class="flex items-center">
+                        <div class="w-4 h-4 rounded-full mr-3" style="background-color: ${program.color}"></div>
+                        <div>
+                            <span class="font-medium">${program.name}</span>
+                            <span class="text-gray-500 text-sm ml-2">(${program.code})</span>
+                            <div class="text-xs text-gray-400">${level ? level.name : 'N/A'}</div>
+                        </div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editProgram('${program.id}')" class="p-1 text-blue-500 hover:text-blue-700">
+                            <span class="text-sm">✏️</span>
+                        </button>
+                        <button onclick="deleteProgram('${program.id}')" class="p-1 text-red-500 hover:text-red-700">
+                            <span class="text-sm">🗑️</span>
+                        </button>
+                    </div>
+                `;
+                programsList.appendChild(programDiv);
+            });
+            
+            document.getElementById('programsCount').textContent = `${programs.length} parcours`;
+        }
+
+        function updateTeachersList() {
+            if (!window.universityApp || !window.universityApp.appData) return;
+            
+            const teachersList = document.getElementById('teachersList');
+            const teachers = [...new Set(window.universityApp.appData.courses.map(c => c.teacher))].filter(Boolean);
+            
+            teachersList.innerHTML = '';
+            
+            teachers.forEach(teacher => {
+                const teacherDiv = document.createElement('div');
+                teacherDiv.className = 'list-item';
+                teacherDiv.innerHTML = `
+                    <div>
+                        <span class="font-medium">${teacher}</span>
+                        <div class="text-xs text-gray-400">Enseignant</div>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button onclick="editTeacher('${teacher}')" class="p-1 text-blue-500 hover:text-blue-700">
+                            <span class="text-sm">✏️</span>
+                        </button>
+                        <button onclick="deleteTeacher('${teacher}')" class="p-1 text-red-500 hover:text-red-700">
+                            <span class="text-sm">🗑️</span>
+                        </button>
+                    </div>
+                `;
+                teachersList.appendChild(teacherDiv);
+            });
+            
+            document.getElementById('teachersCount').textContent = `${teachers.length} enseignants`;
+        }
+
+        function updateLevelSelects() {
+            if (!window.universityApp || !window.universityApp.appData) return;
+            
+            const programLevelSelect = document.getElementById('programLevel');
+            programLevelSelect.innerHTML = '<option value="">Sélectionner un niveau</option>';
+            window.universityApp.appData.levels.forEach(level => {
+                programLevelSelect.innerHTML += `<option value="${level.id}">${level.name}</option>`;
+            });
+        }
+
+        function addLevel() {
+            const name = document.getElementById('levelName').value.trim();
+            const code = document.getElementById('levelCode').value.trim();
+            const color = document.getElementById('levelColor').value;
+            
+            if (!name || !code) {
+                alert('Veuillez remplir tous les champs');
+                return;
+            }
+            
+            window.universityApp.addLevel();
+            updateLevelsList();
+            updateLevelSelects();
+            
+            // Vider les champs
+            document.getElementById('levelName').value = '';
+            document.getElementById('levelCode').value = '';
+        }
+
+        function addProgram() {
+            const levelId = document.getElementById('programLevel').value;
+            const name = document.getElementById('programName').value.trim();
+            const code = document.getElementById('programCode').value.trim();
+            
+            if (!levelId || !name || !code) {
+                alert('Veuillez remplir tous les champs');
+                return;
+            }
+            
+            window.universityApp.addProgram();
+            updateProgramsList();
+            
+            // Vider les champs
+            document.getElementById('programLevel').value = '';
+            document.getElementById('programName').value = '';
+            document.getElementById('programCode').value = '';
+        }
+
+        function addTeacher() {
+            const name = document.getElementById('teacherName').value.trim();
+            const email = document.getElementById('teacherEmail').value.trim();
+            const department = document.getElementById('teacherDepartment').value.trim();
+            
+            if (!name) {
+                alert('Veuillez entrer le nom de l\'enseignant');
+                return;
+            }
+            
+            // Vérifier si l'enseignant existe déjà
+            const existingTeachers = [...new Set(window.universityApp.appData.courses.map(c => c.teacher))].filter(Boolean);
+            if (existingTeachers.includes(name)) {
+                alert('Cet enseignant existe déjà');
+                return;
+            }
+            
+            // Ajouter un cours fictif pour créer l'enseignant
+            const dummyCourse = {
+                id: 'dummy_teacher_' + Date.now(),
+                name: 'Cours fictif',
+                code: 'DUMMY',
+                description: 'Cours fictif pour créer un enseignant',
+                teacher: name,
+                duration: 120,
+                level_id: window.universityApp.appData.levels[0]?.id || '',
+                program_id: window.universityApp.appData.programs[0]?.id || ''
+            };
+            
+            window.universityApp.appData.courses.push(dummyCourse);
+            window.universityApp.saveData();
+            
+            updateTeachersList();
+            
+            // Vider les champs
+            document.getElementById('teacherName').value = '';
+            document.getElementById('teacherEmail').value = '';
+            document.getElementById('teacherDepartment').value = '';
+            
+            window.universityApp.showNotification('Enseignant ajouté avec succès', 'success');
+        }
+
+        function editLevel(levelId) {
+            const level = window.universityApp.appData.levels.find(l => l.id === levelId);
+            if (!level) return;
+            
+            const newName = prompt('Nouveau nom du niveau:', level.name);
+            const newCode = prompt('Nouveau code du niveau:', level.code);
+            
+            if (newName && newCode) {
+                level.name = newName;
+                level.code = newCode;
+                window.universityApp.saveData();
+                updateLevelsList();
+                window.universityApp.showNotification('Niveau modifié avec succès', 'success');
+            }
+        }
+
+        function editProgram(programId) {
+            const program = window.universityApp.appData.programs.find(p => p.id === programId);
+            if (!program) return;
+            
+            const newName = prompt('Nouveau nom du parcours:', program.name);
+            const newCode = prompt('Nouveau code du parcours:', program.code);
+            
+            if (newName && newCode) {
+                program.name = newName;
+                program.code = newCode;
+                window.universityApp.saveData();
+                updateProgramsList();
+                window.universityApp.showNotification('Parcours modifié avec succès', 'success');
+            }
+        }
+
+        function editTeacher(teacherName) {
+            const newName = prompt('Nouveau nom de l\'enseignant:', teacherName);
+            if (newName && newName !== teacherName) {
+                // Mettre à jour tous les cours de cet enseignant
+                window.universityApp.appData.courses.forEach(course => {
+                    if (course.teacher === teacherName) {
+                        course.teacher = newName;
+                    }
+                });
+                window.universityApp.saveData();
+                updateTeachersList();
+                window.universityApp.showNotification('Enseignant modifié avec succès', 'success');
+            }
+        }
+
+        function deleteLevel(levelId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce niveau ?')) {
+                window.universityApp.deleteLevel(levelId);
+                updateLevelsList();
+                updateLevelSelects();
+            }
+        }
+
+        function deleteProgram(programId) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer ce parcours ?')) {
+                window.universityApp.appData.programs = window.universityApp.appData.programs.filter(p => p.id !== programId);
+                window.universityApp.saveData();
+                updateProgramsList();
+                window.universityApp.showNotification('Parcours supprimé avec succès', 'success');
+            }
+        }
+
+        function deleteTeacher(teacherName) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cet enseignant ?')) {
+                // Supprimer l'enseignant des cours
+                window.universityApp.appData.courses.forEach(course => {
+                    if (course.teacher === teacherName) {
+                        course.teacher = '';
+                    }
+                });
+                window.universityApp.saveData();
+                updateTeachersList();
+                window.universityApp.showNotification('Enseignant supprimé avec succès', 'success');
+            }
+        }
+
+        function generateWeeklyPDF() {
+            window.universityApp.showNotification('Génération du PDF en cours...', 'info');
+            
+            setTimeout(() => {
+                window.universityApp.showNotification('PDF généré avec succès', 'success');
+            }, 2000);
+        }
+
+        // Initialiser les compteurs au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                updateLevelsList();
+                updateProgramsList();
+                updateTeachersList();
+                
+                // Mettre à jour le compteur de cours
+                if (window.universityApp && window.universityApp.appData) {
+                    const courses = window.universityApp.appData.courses;
+                    document.getElementById('coursesCount').textContent = `${courses.length} cours`;
+                }
+            }, 100);
+        });
+    </script>
+</body>
+</html>
