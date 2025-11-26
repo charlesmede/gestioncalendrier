@@ -719,8 +719,7 @@ function closeModal(modalId) {
             }
         });
     }
-}
-import { createClient } from '@supabase/supabase-js';
+    import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
   'https://<project-ref>.supabase.co',
@@ -736,5 +735,7 @@ const { data, error } = await supabase
 const { data: submissions } = await supabase
   .from('submissions')
   .select('*');
+}
+
 
 console.log('Module de gestion des cours chargé');
