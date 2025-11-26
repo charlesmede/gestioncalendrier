@@ -719,22 +719,12 @@ function closeModal(modalId) {
             }
         });
     }
-    import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  'https://<project-ref>.supabase.co',
-  '<public-anon-key>' // ⚠️ ne pas exposer de clé privée !
-);
+import { createClient } from '@supabase/supabase-js'
 
-// Insérer une donnée
-const { data, error } = await supabase
-  .from('submissions')
-  .insert([{ name: 'Ali', code: 'B1' }]);
-
-// Lire les données
-const { data: submissions } = await supabase
-  .from('submissions')
-  .select('*');
+const supabaseUrl = 'https://akhskysmtkkonfvujznx.supabase.co'
+const supabaseKey = process.env.SUPABASE_KEY
+const supabase = createClient(https://akhskysmtkkonfvujznx.supabase.co, eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFraHNreXNtdGtrb25mdnVqem54Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxMDQ1MTIsImV4cCI6MjA3OTY4MDUxMn0.8g3p5RkjyltH3RtTu7NDkaBw56ZBt4CGSmfzw1jDgG4)
 }
 
 
