@@ -720,5 +720,21 @@ function closeModal(modalId) {
         });
     }
 }
+import { createClient } from '@supabase/supabase-js';
+
+const supabase = createClient(
+  'https://<project-ref>.supabase.co',
+  '<public-anon-key>' // ⚠️ ne pas exposer de clé privée !
+);
+
+// Insérer une donnée
+const { data, error } = await supabase
+  .from('submissions')
+  .insert([{ name: 'Ali', code: 'B1' }]);
+
+// Lire les données
+const { data: submissions } = await supabase
+  .from('submissions')
+  .select('*');
 
 console.log('Module de gestion des cours chargé');
